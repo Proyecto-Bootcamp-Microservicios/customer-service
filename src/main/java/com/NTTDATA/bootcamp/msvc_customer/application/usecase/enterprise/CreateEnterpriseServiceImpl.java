@@ -28,6 +28,6 @@ public class CreateEnterpriseServiceImpl implements ICreateEnterpriseUseCase {
         );
 
         Mono<Enterprise> savedEnterprise = enterpriseRepositoryPort.save(enterprise);
-        return savedEnterprise.map(se -> new CustomerResponse(se.getBusinessName(), se.getFullName(), se.getCustomerType().name(), se.getDocumentValue(), se.getEmail(), se.isActive(), se.getCreatedAt()));
+        return savedEnterprise.map(se -> new CustomerResponse(se.getId().getValue(), se.getFullName(), se.getCustomerType().name(), se.getDocumentValue(), se.getEmail(), se.isActive(), se.getCreatedAt()));
     }
 }

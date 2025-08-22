@@ -1,0 +1,1002 @@
+openapi: 3.0.3
+info:
+    title: Customer Service API
+    description: Microservicio para la gestión de clientes bancarios
+    version: 1.0.0
+    contact:
+        name: NTT Data Bootcamp
+
+servers:
+    - url: http://localhost:8080
+      description: Servidor de desarrollo
+
+tags:
+    - name: Enterprise Customers
+      description: Operaciones para clientes empresariales
+    - name: Personal Customers
+      description: Operaciones para clientes personales
+    - name: Customer Queries
+      description: Consultas y validaciones generales de clientes
+
+paths:
+    /enterprise:
+        get:
+            tags:
+                - Enterprise Customers
+            summary: Obtener todos los clientes empresariales
+            description: Retorna una lista de todos los clientes empresariales
+            operationId: retriveAllEnterpriseCustomers
+            responses:
+                '200':
+                    description: Lista de clientes empresariales obtenida exitosamente
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: '#/components/schemas/CustomerResponse'
+                            example:
+                                - id: "987fcdeb-51a2-43d1-b789-123456789abc"
+                                  name: "Empresa ABC SAC"
+                                  customerType: "ENTERPRISE"
+                                  documentNumber: "20123456789"
+                                  email: "contacto@empresaabc.com"
+                                  active: true
+                                  createdAt: "2024-01-15T10:00:00Z"
+                                - id: "abc123de-f456-7890-abcd-ef1234567890"
+                                  name: "Empresa XYZ SAC"
+                                  customerType: "ENTERPRISE"
+                                  documentNumber: "20987654321"
+                                  email: "contacto@xyz.com"
+                                  active: true
+                                  createdAt: "2024-01-15T11:00:00Z"
+                '500':
+                    description: Error interno del servidor
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ErrorResponse'
+
+        post:
+            tags:
+                - Enterprise Customers
+            summary: Crear cliente empresarial
+            description: Crea un nuevo cliente empresarial
+            operationId: createEnterpriseCustomer
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/CreateEnterpriseRequest'
+                        example:
+                            businessName: "Empresa ABC SAC"
+                            ruc: "20123456789"
+                            email: "contacto@empresaabc.com"
+                            phone: "+51 1 1234567"
+                            street: "Jr. Comercial 456"
+                            city: "Lima"
+                            country: "Perú"
+                            zipCode: "15002"
+            responses:
+                '200':
+                    description: Cliente empresarial creado exitosamente
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/CustomerResponse'
+                '400':
+                    description: Datos de entrada inválidos
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ErrorResponse'
+                '500':
+                    description: Error interno del servidor
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ErrorResponse'
+
+    /enterprise/{id}:
+        get:
+            tags:
+                - Enterprise Customers
+            summary: Obtener cliente empresarial por ID
+            description: Obtiene un cliente empresarial específico por su ID único
+            operationId: retrieveEnterpriseCustomer
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  description: ID único del cliente empresarial
+                  schema:
+                      type: string
+                      format: uuid
+                  example: "987fcdeb-51a2-43d1-b789-123456789abc"
+            responses:
+                '200':
+                    description: Cliente empresarial obtenido exitosamente
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/CustomerResponse'
+                '404':
+                    description: Cliente empresarial no encontrado
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ErrorResponse'
+                '500':
+                    description: Error interno del servidor
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ErrorResponse'
+
+    /enterprise/document-number/{documentNumber}:
+        get:
+            tags:
+                - Enterprise Customers
+            summary: Obtener cliente empresarial por documento
+            description: Obtiene un cliente empresarial por tipo y número de documento
+            operationId: retrieveEnterpriseCustomerByDocument
+            parameters:
+                - name: documentNumber
+                  in: path
+                  required: true
+                  description: Número de documento
+                  schema:
+                      type: string
+                      pattern: '^[0-9]{11}$'
+                  example: "20123456789"
+            responses:
+                '200':
+                    description: Cliente empresarial obtenido exitosamente
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/CustomerResponse'
+                '404':
+                    description: Cliente empresarial no encontrado
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ErrorResponse'
+                '500':
+                    description: Error interno del servidor
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ErrorResponse'
+
+    /enterprise/update/{id}:
+        put:
+            tags:
+                - Enterprise Customers
+            summary: Actualizar cliente empresarial
+            description: Actualiza la información de un cliente empresarial existente
+            operationId: updateEnterpriseCustomer
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  description: ID único del cliente empresarial
+                  schema:
+                      type: string
+                      format: uuid
+                  example: "987fcdeb-51a2-43d1-b789-123456789abc"
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/UpdateEnterpriseRequest'
+                        example:
+                            businessName: "Empresa ABC SAC Actualizada"
+                            email: "nuevo@empresaabc.com"
+                            phone: "+51 1 9876543"
+                            street: "Jr. Nueva Dirección 789"
+                            city: "Trujillo"
+                            country: "Perú"
+                            zipCode: "13001"
+            responses:
+                '200':
+                    description: Cliente empresarial actualizado exitosamente
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/CustomerResponse'
+                '400':
+                    description: Datos de entrada inválidos
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ErrorResponse'
+                '404':
+                    description: Cliente empresarial no encontrado
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ErrorResponse'
+                '500':
+                    description: Error interno del servidor
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ErrorResponse'
+
+    /enterprise/desactivate/{id}:
+        delete:
+            tags:
+                - Enterprise Customers
+            summary: Desactivar cliente empresarial
+            description: Desactiva un cliente empresarial (soft delete)
+            operationId: desactivateEnterpriseCustomer
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  description: ID único del cliente empresarial
+                  schema:
+                      type: string
+                      format: uuid
+                  example: "987fcdeb-51a2-43d1-b789-123456789abc"
+            responses:
+                '200':
+                    description: Cliente empresarial desactivado exitosamente
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/CustomerResponse'
+                '404':
+                    description: Cliente empresarial no encontrado
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ErrorResponse'
+                '500':
+                    description: Error interno del servidor
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ErrorResponse'
+    /personal:
+        get:
+            tags:
+                - Personal Customers
+            summary: Obtener todos los clientes personales
+            description: Retorna una lista de todos los clientes personales
+            operationId: retriveAllPersonalCustomers
+            responses:
+                '200':
+                    description: Lista de clientes personales obtenida exitosamente
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: '#/components/schemas/CustomerResponse'
+                            example:
+                                -   id: "123e4567-e89b-12d3-a456-426614174000"
+                                    name: "Juan Pérez"
+                                    customerType: "PERSONAL"
+                                    documentNumber: "12345678"
+                                    email: "juan.perez@email.com"
+                                    active: true
+                                    createdAt: "2024-01-15T10:00:00Z"
+                                -   id: "456e7890-e89b-12d3-a456-426614174000"
+                                    name: "María García"
+                                    customerType: "PERSONAL"
+                                    documentNumber: "87654321"
+                                    email: "maria.garcia@email.com"
+                                    active: true
+                                    createdAt: "2024-01-15T11:00:00Z"
+                '500':
+                    description: Error interno del servidor
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ErrorResponse'
+
+        post:
+            tags:
+                - Personal Customers
+            summary: Crear cliente personal
+            description: Crea un nuevo cliente personal
+            operationId: createPersonalCustomer
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/CreatePersonalRequest'
+                        example:
+                            firstName: "Juan"
+                            lastName: "Pérez"
+                            documentNumber: "12345678"
+                            documentType: "DNI"
+                            email: "juan.perez@email.com"
+                            phone: "+51 999888777"
+                            street: "Av. Principal 123"
+                            city: "Lima"
+                            country: "Perú"
+                            zipCode: "15001"
+                            birthDate: "1990-05-15"
+            responses:
+                '200':
+                    description: Cliente personal creado exitosamente
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/CustomerResponse'
+                '400':
+                    description: Datos de entrada inválidos
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ErrorResponse'
+                '500':
+                    description: Error interno del servidor
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ErrorResponse'
+
+    /personal/{id}:
+        get:
+            tags:
+                - Personal Customers
+            summary: Obtener cliente personal por ID
+            description: Obtiene un cliente personal específico por su ID único
+            operationId: retrievePersonalCustomer
+            parameters:
+                -   name: id
+                    in: path
+                    required: true
+                    description: ID único del cliente personal
+                    schema:
+                        type: string
+                        format: uuid
+                    example: "123e4567-e89b-12d3-a456-426614174000"
+            responses:
+                '200':
+                    description: Cliente personal obtenido exitosamente
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/CustomerResponse'
+                '404':
+                    description: Cliente personal no encontrado
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ErrorResponse'
+                '500':
+                    description: Error interno del servidor
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ErrorResponse'
+
+    /personal/document-type/{documentType}/document-number/{documentNumber}:
+        get:
+            tags:
+                - Personal Customers
+            summary: Obtener cliente personal por documento
+            description: Obtiene un cliente personal por tipo y número de documento
+            operationId: retrievePersonalCustomerByDocument
+            parameters:
+                -   name: documentType
+                    in: path
+                    required: true
+                    description: Tipo de documento
+                    schema:
+                        type: string
+                    example: "DNI"
+                -   name: documentNumber
+                    in: path
+                    required: true
+                    description: Número de documento
+                    schema:
+                        type: string
+                        minLength: 8
+                        maxLength: 20
+                    example: "12345678"
+            responses:
+                '200':
+                    description: Cliente personal obtenido exitosamente
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/CustomerResponse'
+                '404':
+                    description: Cliente personal no encontrado
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ErrorResponse'
+                '500':
+                    description: Error interno del servidor
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ErrorResponse'
+
+    /personal/update/{id}:
+        put:
+            tags:
+                - Personal Customers
+            summary: Actualizar cliente personal
+            description: Actualiza la información de un cliente personal existente
+            operationId: updatePersonalCustomer
+            parameters:
+                -   name: id
+                    in: path
+                    required: true
+                    description: ID único del cliente personal
+                    schema:
+                        type: string
+                        format: uuid
+                    example: "123e4567-e89b-12d3-a456-426614174000"
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/UpdatePersonalRequest'
+                        example:
+                            firstName: "Juan Carlos"
+                            lastName: "Pérez García"
+                            email: "juan.perez@nuevoemail.com"
+                            phone: "+51 999888777"
+                            street: "Av. Nueva Dirección 789"
+                            city: "Arequipa"
+                            country: "Perú"
+                            zipCode: "04001"
+                            birthDate: "1990-05-15"
+            responses:
+                '200':
+                    description: Cliente personal actualizado exitosamente
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/CustomerResponse'
+                '400':
+                    description: Datos de entrada inválidos
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ErrorResponse'
+                '404':
+                    description: Cliente personal no encontrado
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ErrorResponse'
+                '500':
+                    description: Error interno del servidor
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ErrorResponse'
+
+    /personal/desactivate/{id}:
+        delete:
+            tags:
+                - Personal Customers
+            summary: Desactivar cliente personal
+            description: Desactiva un cliente personal (soft delete)
+            operationId: desactivatePersonalCustomer
+            parameters:
+                -   name: id
+                    in: path
+                    required: true
+                    description: ID único del cliente personal
+                    schema:
+                        type: string
+                        format: uuid
+                    example: "123e4567-e89b-12d3-a456-426614174000"
+            responses:
+                '200':
+                    description: Cliente personal desactivado exitosamente
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/CustomerResponse'
+                '404':
+                    description: Cliente personal no encontrado
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ErrorResponse'
+                '500':
+                    description: Error interno del servidor
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ErrorResponse'
+
+    /customers/count:
+        get:
+            tags:
+                - Customer Queries
+            summary: Obtener total de clientes
+            description: Retorna el número total de clientes en el sistema
+            operationId: totalCustomers
+            responses:
+                '200':
+                    description: Total de clientes obtenido exitosamente
+                    content:
+                        application/json:
+                            schema:
+                                type: integer
+                                minimum: 0
+                            example: 1250
+                '500':
+                    description: Error interno del servidor
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ErrorResponse'
+
+    /customers/email-exists/{email}:
+        get:
+            tags:
+                - Customer Queries
+            summary: Verificar si existe un email
+            description: Verifica si un correo electrónico ya está registrado en el sistema
+            operationId: emailExists
+            parameters:
+                -   name: email
+                    in: path
+                    required: true
+                    description: Correo electrónico a verificar
+                    schema:
+                        type: string
+                        format: email
+                    example: "juan.perez@email.com"
+            responses:
+                '200':
+                    description: Verificación de email exitosa
+                    content:
+                        application/json:
+                            schema:
+                                type: boolean
+                            example: true
+                '400':
+                    description: Formato de email inválido
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ErrorResponse'
+                '500':
+                    description: Error interno del servidor
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ErrorResponse'
+
+    /customers/id-exists/{id}:
+        get:
+            tags:
+                - Customer Queries
+            summary: Verificar si existe un ID de cliente
+            description: Verifica si un ID de cliente existe en el sistema
+            operationId: idExists
+            parameters:
+                -   name: id
+                    in: path
+                    required: true
+                    description: ID único del cliente a verificar
+                    schema:
+                        type: string
+                        format: uuid
+                    example: "123e4567-e89b-12d3-a456-426614174000"
+            responses:
+                '200':
+                    description: Verificación de ID exitosa
+                    content:
+                        application/json:
+                            schema:
+                                type: boolean
+                            example: true
+                '400':
+                    description: Formato de ID inválido
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ErrorResponse'
+                '500':
+                    description: Error interno del servidor
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ErrorResponse'
+
+    /customers/count-by-customer-type/{customerType}:
+        get:
+            tags:
+                - Customer Queries
+            summary: Contar clientes por tipo
+            description: Retorna el número de clientes de un tipo específico
+            operationId: getCustomerCountByType
+            parameters:
+                -   name: customerType
+                    in: path
+                    required: true
+                    description: Tipo de cliente a contar
+                    schema:
+                        type: string
+                        enum: [ PERSONAL, ENTERPRISE ]
+                    example: "PERSONAL"
+            responses:
+                '200':
+                    description: Conteo de clientes por tipo exitoso
+                    content:
+                        application/json:
+                            schema:
+                                type: integer
+                                minimum: 0
+                            example: 890
+                '400':
+                    description: Tipo de cliente inválido
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ErrorResponse'
+                '500':
+                    description: Error interno del servidor
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ErrorResponse'
+
+    /customers/exists/document-type/{documentType}/document-number/{numberDocument}:
+        get:
+            tags:
+                - Customer Queries
+            summary: Verificar si existe documento
+            description: Verifica si existe un cliente con un tipo y número de documento específicos
+            operationId: typeDocumentAndNumberExists
+            parameters:
+                -   name: documentType
+                    in: path
+                    required: true
+                    description: Tipo de documento
+                    schema:
+                        type: string
+                        enum: [ DNI, RUC, PASSPORT ]
+                    example: "DNI"
+                -   name: numberDocument
+                    in: path
+                    required: true
+                    description: Número de documento
+                    schema:
+                        type: string
+                        minLength: 8
+                        maxLength: 20
+                    example: "12345678"
+            responses:
+                '200':
+                    description: Verificación de documento exitosa
+                    content:
+                        application/json:
+                            schema:
+                                type: boolean
+                            example: true
+                '400':
+                    description: Parámetros de documento inválidos
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ErrorResponse'
+                '500':
+                    description: Error interno del servidor
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+    schemas:
+        CreatePersonalRequest:
+            type: object
+            required:
+                - firstName
+                - lastName
+                - documentNumber
+                - documentType
+                - email
+                - phone
+                - street
+                - city
+                - country
+                - zipCode
+                - birthDate
+            properties:
+                firstName:
+                    type: string
+                    minLength: 1
+                    maxLength: 100
+                    description: Nombre del cliente personal
+                    example: "Juan"
+                lastName:
+                    type: string
+                    minLength: 1
+                    maxLength: 100
+                    description: Apellido del cliente personal
+                    example: "Pérez"
+                documentNumber:
+                    type: string
+                    minLength: 8
+                    maxLength: 20
+                    description: Número de documento
+                    example: "12345678"
+                documentType:
+                    type: string
+                    enum: [ DNI, PASSPORT ]
+                    description: Tipo de documento
+                    example: "DNI"
+                email:
+                    type: string
+                    format: email
+                    description: Correo electrónico del cliente
+                    example: "juan.perez@email.com"
+                phone:
+                    type: string
+                    minLength: 7
+                    maxLength: 20
+                    description: Número de teléfono
+                    example: "+51 999888777"
+                street:
+                    type: string
+                    minLength: 1
+                    maxLength: 200
+                    description: Dirección de la calle
+                    example: "Av. Principal 123"
+                city:
+                    type: string
+                    minLength: 1
+                    maxLength: 100
+                    description: Ciudad
+                    example: "Lima"
+                country:
+                    type: string
+                    minLength: 1
+                    maxLength: 100
+                    description: País
+                    example: "Perú"
+                zipCode:
+                    type: string
+                    minLength: 3
+                    maxLength: 10
+                    description: Código postal
+                    example: "15001"
+                birthDate:
+                    type: string
+                    format: date
+                    description: Fecha de nacimiento
+                    example: "1990-05-15"
+
+        UpdatePersonalRequest:
+            type: object
+            properties:
+                firstName:
+                    type: string
+                    minLength: 1
+                    maxLength: 100
+                    description: Nombre del cliente personal
+                    example: "Juan Carlos"
+                lastName:
+                    type: string
+                    minLength: 1
+                    maxLength: 100
+                    description: Apellido del cliente personal
+                    example: "Pérez García"
+                email:
+                    type: string
+                    format: email
+                    description: Correo electrónico del cliente
+                    example: "juan.perez@nuevoemail.com"
+                phone:
+                    type: string
+                    minLength: 7
+                    maxLength: 20
+                    description: Número de teléfono
+                    example: "+51 999888777"
+                street:
+                    type: string
+                    minLength: 1
+                    maxLength: 200
+                    description: Dirección de la calle
+                    example: "Av. Nueva Dirección 789"
+                city:
+                    type: string
+                    minLength: 1
+                    maxLength: 100
+                    description: Ciudad
+                    example: "Arequipa"
+                country:
+                    type: string
+                    minLength: 1
+                    maxLength: 100
+                    description: País
+                    example: "Perú"
+                zipCode:
+                    type: string
+                    minLength: 3
+                    maxLength: 10
+                    description: Código postal
+                    example: "04001"
+                birthDate:
+                    type: string
+                    format: date
+                    description: Fecha de nacimiento
+                    example: "1990-05-15"
+
+        CreateEnterpriseRequest:
+            type: object
+            required:
+                - businessName
+                - ruc
+                - email
+                - phone
+                - street
+                - city
+                - country
+                - zipCode
+            properties:
+                businessName:
+                    type: string
+                    minLength: 1
+                    maxLength: 200
+                    description: Nombre de la empresa
+                    example: "Empresa ABC SAC"
+                ruc:
+                    type: string
+                    minLength: 11
+                    maxLength: 11
+                    pattern: '^[0-9]{11}$'
+                    description: Número RUC de la empresa
+                    example: "20123456789"
+                email:
+                    type: string
+                    format: email
+                    description: Correo electrónico de la empresa
+                    example: "contacto@empresaabc.com"
+                phone:
+                    type: string
+                    minLength: 7
+                    maxLength: 20
+                    description: Número de teléfono
+                    example: "+51 1 1234567"
+                street:
+                    type: string
+                    minLength: 1
+                    maxLength: 200
+                    description: Dirección de la calle
+                    example: "Jr. Comercial 456"
+                city:
+                    type: string
+                    minLength: 1
+                    maxLength: 100
+                    description: Ciudad
+                    example: "Lima"
+                country:
+                    type: string
+                    minLength: 1
+                    maxLength: 100
+                    description: País
+                    example: "Perú"
+                zipCode:
+                    type: string
+                    minLength: 3
+                    maxLength: 10
+                    description: Código postal
+                    example: "15002"
+
+        UpdateEnterpriseRequest:
+            type: object
+            properties:
+                businessName:
+                    type: string
+                    minLength: 1
+                    maxLength: 200
+                    description: Nombre de la empresa
+                    example: "Empresa ABC SAC Actualizada"
+                email:
+                    type: string
+                    format: email
+                    description: Correo electrónico de la empresa
+                    example: "nuevo@empresaabc.com"
+                phone:
+                    type: string
+                    minLength: 7
+                    maxLength: 20
+                    description: Número de teléfono
+                    example: "+51 1 9876543"
+                street:
+                    type: string
+                    minLength: 1
+                    maxLength: 200
+                    description: Dirección de la calle
+                    example: "Jr. Nueva Dirección 789"
+                city:
+                    type: string
+                    minLength: 1
+                    maxLength: 100
+                    description: Ciudad
+                    example: "Trujillo"
+                country:
+                    type: string
+                    minLength: 1
+                    maxLength: 100
+                    description: País
+                    example: "Perú"
+                zipCode:
+                    type: string
+                    minLength: 3
+                    maxLength: 10
+                    description: Código postal
+                    example: "13001"
+
+        CustomerResponse:
+            type: object
+            properties:
+                id:
+                    type: string
+                    description: ID único del cliente
+                    example: "987fcdeb-51a2-43d1-b789-123456789abc"
+                name:
+                    type: string
+                    description: Nombre completo del cliente
+                    example: "Empresa ABC SAC"
+                customerType:
+                    type: string
+                    description: Tipo de cliente
+                    example: "ENTERPRISE"
+                documentNumber:
+                    type: string
+                    description: Número de documento
+                    example: "20123456789"
+                email:
+                    type: string
+                    format: email
+                    description: Correo electrónico
+                    example: "contacto@empresaabc.com"
+                active:
+                    type: boolean
+                    description: Estado activo del cliente
+                    example: true
+                createdAt:
+                    type: string
+                    format: date-time
+                    pattern: '^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}$'
+                    description: Fecha de creación
+                    example: "2024-01-15T10:00:00Z"
+
+        ErrorResponse:
+            type: object
+            properties:
+                timestamp:
+                    type: string
+                    format: date-time
+                    description: Timestamp del error
+                    example: "2024-01-15T10:00:00Z"
+                status:
+                    type: integer
+                    description: Código de estado HTTP
+                    example: 400
+                error:
+                    type: string
+                    description: Tipo de error
+                    example: "Bad Request"
+                message:
+                    type: string
+                    description: Mensaje descriptivo del error
+                    example: "Business name is required for enterprise customer"
+                path:
+                    type: string
+                    description: Ruta donde ocurrió el error
+                    example: "/enterprise"

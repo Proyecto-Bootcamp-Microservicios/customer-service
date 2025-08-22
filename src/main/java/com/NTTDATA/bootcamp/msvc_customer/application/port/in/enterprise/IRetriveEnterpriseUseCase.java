@@ -8,6 +8,6 @@ public interface IRetriveEnterpriseUseCase {
 
     Flux<CustomerResponse> retriveAllWithoutFilters();
     Mono<CustomerResponse> retrieveById(String id);
-    Mono<CustomerResponse> retrieveByDocumentTypeAndDocumentNumber(String documentType, String documentNumber);
+    Mono<CustomerResponse> retrieveByDocumentNumber(String documentNumber);
 
 }

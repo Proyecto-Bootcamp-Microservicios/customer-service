@@ -3,6 +3,7 @@ package com.NTTDATA.bootcamp.msvc_customer.application.usecase.enterprise;
 import com.NTTDATA.bootcamp.msvc_customer.application.dto.response.CustomerResponse;
 import com.NTTDATA.bootcamp.msvc_customer.application.port.in.enterprise.IRetriveEnterpriseUseCase;
 import com.NTTDATA.bootcamp.msvc_customer.domain.enums.CustomerType;
+import com.NTTDATA.bootcamp.msvc_customer.domain.enums.DocumentType;
 import com.NTTDATA.bootcamp.msvc_customer.domain.port.out.IEnterpriseRepositoryPort;
 import lombok.AllArgsConstructor;
 import reactor.core.publisher.Flux;
@@ -25,7 +26,7 @@ public class RetriveEnterpriseServiceImpl implements IRetriveEnterpriseUseCase {
     }
 
     @Override
-    public Mono<CustomerResponse> retrieveByDocumentTypeAndDocumentNumber(String documentType, String documentNumber) {
-        return enterpriseRepositoryPort.findByDocumentTypeAndDocumentNumber(documentType, documentNumber).map(e -> new CustomerResponse(e.getId().getValue(), e.getFullName(), e.getCustomerType().name(), e.getDocumentValue(), e.getEmail(), e.isActive(), e.getCreatedAt()));
+    public Mono<CustomerResponse> retrieveByDocumentNumber(String documentNumber) {
+        return enterpriseRepositoryPort.findByDocumentTypeAndDocumentNumber(DocumentType.RUC.name(), documentNumber).map(e -> new CustomerResponse(e.getId().getValue(), e.getFullName(), e.getCustomerType().name(), e.getDocumentValue(), e.getEmail(), e.isActive(), e.getCreatedAt()));
     }
 }

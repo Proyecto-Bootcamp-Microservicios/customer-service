@@ -2,17 +2,21 @@ package com.NTTDATA.bootcamp.msvc_customer.application.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
 @Getter
+@Setter
 @AllArgsConstructor
-public final class CustomerResponse {
-    private final String id;
-    private final String name;
-    private final String customerType;
-    private final String documentNumber;
-    private final String email;
-    private final boolean active;
-    private final LocalDateTime createdAt;
+@NoArgsConstructor
+public class CustomerResponse {
+    private String id;
+    private String name;
+    private String customerType;
+    private String documentNumber;
+    private String email;
+    private boolean active;
+    private LocalDateTime createdAt;
 }

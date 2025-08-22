@@ -31,7 +31,7 @@ public class CreatePersonalServiceImpl implements ICreatePersonalUseCase {
 
         Mono<Personal> savedPersonal = personalRepositoryPort.save(personal);
         return savedPersonal
-                .map(sp -> new CustomerResponse(sp.getFirstName(), sp.getLastName(), sp.getCustomerType().name(),
+                .map(sp -> new CustomerResponse(sp.getId().getValue(), sp.getFullName(), sp.getCustomerType().name(),
                         sp.getDocumentValue(), sp.getEmail(), sp.isActive(), sp.getCreatedAt()));
     }
 }
