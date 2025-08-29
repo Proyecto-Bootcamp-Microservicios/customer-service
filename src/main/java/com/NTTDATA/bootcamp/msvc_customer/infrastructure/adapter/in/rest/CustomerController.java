@@ -1,5 +1,6 @@
 package com.NTTDATA.bootcamp.msvc_customer.infrastructure.adapter.in.rest;
 
+import com.NTTDATA.bootcamp.msvc_customer.application.dto.response.CustomerResponse;
 import com.NTTDATA.bootcamp.msvc_customer.application.port.in.validation.ICustomerValidationUseCase;
 import lombok.AllArgsConstructor;
 import org.openapitools.api.CustomerQueriesApi;
@@ -43,6 +44,12 @@ public class CustomerController implements CustomerQueriesApi {
     @Override
     public Mono<ResponseEntity<Boolean>> typeDocumentAndNumberExists(String documentType, String numberDocument, ServerWebExchange exchange) {
         return customerValidationUseCase.typeDocumentAndNumberExists(documentType, numberDocument)
+                .map(ResponseEntity::ok);
+    }
+
+    @GetMapping("/customers/{id}")
+    public Mono<ResponseEntity<CustomerResponse>> findById(@PathVariable String id, ServerWebExchange exchange) {
+        return customerValidationUseCase.findById(id)
                 .map(ResponseEntity::ok);
     }
 

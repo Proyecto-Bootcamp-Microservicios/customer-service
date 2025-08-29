@@ -13,8 +13,8 @@ public class PersonalPersistenceMapperImpl implements IPersonalPersistenceMapper
         return new PersonalCollection(
                 personal.getId().getValue(),
                 personal.getName(),
-                personal.getDocumentNumber().getType().name(),
-                personal.getDocumentNumber().getValue(),
+                personal.getIdentificationDocument().getType().name(),
+                personal.getIdentificationDocument().getValue(),
                 personal.getContactInfo().getEmail(),
                 personal.getContactInfo().getPhone(),
                 personal.getContactInfo().getAddress().getStreet(),
@@ -35,7 +35,7 @@ public class PersonalPersistenceMapperImpl implements IPersonalPersistenceMapper
         System.out.println("DEBUG Mapper - personalCollection.getId() = " + personalCollection.getId());
         System.out.println("DEBUG Mapper - personalCollection.getFirstName() = " + personalCollection.getFirstName());
         System.out.println("DEBUG Mapper - personalCollection.getLastName() = " + personalCollection.getLastName());
-        System.out.println("DEBUG Mapper - personalCollection.getDocumentNumber() = " + personalCollection.getDocumentNumber());
+        System.out.println("DEBUG Mapper - personalCollection.getIdentificationDocument() = " + personalCollection.getDocumentNumber());
         System.out.println("DEBUG Mapper - personalCollection.getDocumentType() = " + personalCollection.getDocumentType());
         System.out.println("DEBUG Mapper - personalCollection.getEmail() = " + personalCollection.getEmail());
         System.out.println("DEBUG Mapper - personalCollection.getPhone() = " + personalCollection.getPhone());

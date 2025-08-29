@@ -1,11 +1,11 @@
-package com.NTTDATA.bootcamp.msvc_customer.domain;
+package com.NTTDATA.bootcamp.msvc_customer.domain.vo;
 
 import lombok.Getter;
 
 import java.time.LocalDateTime;
 
 @Getter
-public class Audit {
+public final class Audit {
 
     private final LocalDateTime createdAt;
     private final LocalDateTime updatedAt;

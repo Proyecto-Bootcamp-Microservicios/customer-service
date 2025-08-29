@@ -142,7 +142,7 @@ paths:
             description: Obtiene un cliente empresarial por tipo y número de documento
             operationId: retrieveEnterpriseCustomerByDocument
             parameters:
-                - name: documentNumber
+                - name: identificationDocument
                   in: path
                   required: true
                   description: Número de documento
@@ -394,7 +394,7 @@ paths:
                     schema:
                         type: string
                     example: "DNI"
-                -   name: documentNumber
+                -   name: identificationDocument
                     in: path
                     required: true
                     description: Número de documento
@@ -705,7 +705,7 @@ components:
             required:
                 - firstName
                 - lastName
-                - documentNumber
+                - identificationDocument
                 - documentType
                 - email
                 - phone

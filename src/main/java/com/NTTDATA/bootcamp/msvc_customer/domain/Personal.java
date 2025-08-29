@@ -2,6 +2,7 @@ package com.NTTDATA.bootcamp.msvc_customer.domain;
 
 import com.NTTDATA.bootcamp.msvc_customer.domain.enums.CustomerType;
 import com.NTTDATA.bootcamp.msvc_customer.domain.enums.DocumentType;
+import com.NTTDATA.bootcamp.msvc_customer.domain.vo.Audit;
 import lombok.Getter;
 
 import java.time.LocalDate;
@@ -47,7 +48,7 @@ public final class Personal extends Customer {
     }
 
     public Personal update(String firstName, String lastName, String email, String phone, String street, String city, String country, String zipCode){
-        return new Personal(this.id.getValue(), firstName, lastName, this.getDocumentValue(), this.documentNumber.getType(), email, phone, street, city, country, zipCode, this.birthDate, this.getAudit().update(), this.isActive());
+        return new Personal(this.id.getValue(), firstName, lastName, this.getDocumentValue(), this.identificationDocument.getType(), email, phone, street, city, country, zipCode, this.birthDate, this.getAudit().update(), this.isActive());
     }
 
     public static Personal reconstruct(String id, String firstName, String lastName,
@@ -69,32 +70,12 @@ public final class Personal extends Customer {
     }
 
     @Override
-    public boolean canHaveASavingsAccount() {
-        return true;
-    }
-
-    @Override
-    public boolean canHaveMultipleFixedTermAccount() {
-        return true;
-    }
-
-    @Override
-    public boolean canHaveMultipleCurrentAccounts() {
-        return false;
-    }
-
-    @Override
-    public boolean canHaveMultipleCredits() {
-        return false;
-    }
-
-    @Override
     public void validateBusinessRules() {
-        if (this.firstName == null || this.firstName.trim().isEmpty()) throw new IllegalArgumentException("First name is required for personal customer");
-        if (this.lastName == null || this.lastName.trim().isEmpty()) throw new IllegalArgumentException("Last name is required for personal customer");
-        if (this.documentNumber.getType() == DocumentType.RUC) throw new IllegalArgumentException("Personal customer cannot have RUC");
+        /*if (this.firstName == null || this.firstName.trim().isEmpty()) throw new IllegalArgumentException("First name is required for personal customer");*/
+/*        if (this.lastName == null || this.lastName.trim().isEmpty()) throw new IllegalArgumentException("Last name is required for personal customer");
+        if (this.identificationDocument.getType() == DocumentType.RUC) throw new IllegalArgumentException("Personal customer cannot have RUC");
         if (this.birthDate == null) throw new IllegalArgumentException("Birth date is required for personal customer");
-        if (LocalDate.now().getYear() - this.birthDate.getYear() < 18) throw new IllegalArgumentException("The minimum age is 18 years");
+        if (LocalDate.now().getYear() - this.birthDate.getYear() < 18) throw new IllegalArgumentException("The minimum age is 18 years");*/
     }
 
     @Override
@@ -103,6 +84,6 @@ public final class Personal extends Customer {
     }
 
     public Personal desactivate() {
-        return new Personal(this.getId().getValue(), this.firstName, this.lastName, this.documentNumber.getValue(), this.documentNumber.getType(), this.getEmail(), this.getPhone(), this.getStreet(), this.getCity(), this.getCountry(), this.getZipCode(), this.birthDate, this.audit.update(), false);
+        return new Personal(this.getId().getValue(), this.firstName, this.lastName, this.identificationDocument.getValue(), this.identificationDocument.getType(), this.getEmail(), this.getPhone(), this.getStreet(), this.getCity(), this.getCountry(), this.getZipCode(), this.birthDate, this.audit.update(), false);
     }
 }

@@ -2,6 +2,7 @@ package com.NTTDATA.bootcamp.msvc_customer.domain;
 
 import com.NTTDATA.bootcamp.msvc_customer.domain.enums.CustomerType;
 import com.NTTDATA.bootcamp.msvc_customer.domain.enums.DocumentType;
+import com.NTTDATA.bootcamp.msvc_customer.domain.vo.Audit;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
@@ -70,29 +71,9 @@ public final class Enterprise extends Customer {
     }
 
     @Override
-    public boolean canHaveASavingsAccount() {
-        return false;
-    }
-
-    @Override
-    public boolean canHaveMultipleFixedTermAccount() {
-        return false;
-    }
-
-    @Override
-    public boolean canHaveMultipleCurrentAccounts() {
-        return true;
-    }
-
-    @Override
-    public boolean canHaveMultipleCredits() {
-        return true;
-    }
-
-    @Override
     public void validateBusinessRules() {
-        if(documentNumber.getType() != DocumentType.RUC) throw new IllegalArgumentException("Enterprise customer must have RUC document type");
-        if(businessName == null || businessName.trim().isEmpty()) throw new IllegalArgumentException("Business name is required for enterprise customer");
+/*        if(identificationDocument.getType() != DocumentType.RUC) throw new IllegalArgumentException("Enterprise customer must have RUC document type");
+        if(businessName == null || businessName.trim().isEmpty()) throw new IllegalArgumentException("Business name is required for enterprise customer");*/
     }
 
     @Override
